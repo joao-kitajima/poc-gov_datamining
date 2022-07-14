@@ -1,0 +1,18 @@
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "name": "mytimer",
+      "type": "timerTrigger",
+      "direction": "in",
+      "schedule": "0 */20 * * * *"
+    },
+    {
+      "name": "outputblob",
+      "type": "blob",
+      "direction": "out",
+      "path": "datalake/almg_crawler.jsonl",
+      "connection": "AzureWebJobsStorage"
+    }
+  ]
+}

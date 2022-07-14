@@ -8,7 +8,7 @@
 			"isBackground": true,
 			"dependsOn": "pip install (functions)",
 			"options": {
-				"cwd": "${workspaceFolder}/mining/gov/legislativo/esfera_estadual/alsp"
+				"cwd": "${workspaceFolder}/mining/gov/legislativo/esfera_estadual/almg"
 			}
 		},
 		{
@@ -25,7 +25,7 @@
 			},
 			"problemMatcher": [],
 			"options": {
-				"cwd": "${workspaceFolder}/mining/gov/legislativo/esfera_estadual/alsp"
+				"cwd": "${workspaceFolder}/mining/gov/legislativo/esfera_estadual/almg"
 			}
 		}
 	]
