@@ -4,7 +4,7 @@ import os
 import azure.functions as func
 from io import TextIOWrapper
 from config.definitions import ROOT_DIR, run_spider
-from ..scraping.scraping.spiders import crawlers
+from scraping.scraping.spiders import crawlers
 
 
 def main(mytimer: func.TimerRequest, outputblob: func.Out[TextIOWrapper]) -> None:
