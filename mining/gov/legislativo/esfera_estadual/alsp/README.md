@@ -1,1 +1,0 @@
-Assembleia Legislativa do Estado de São Paulo
