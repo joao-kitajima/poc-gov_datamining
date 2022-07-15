@@ -1,3 +1,3 @@
-# POC IBureau
+# POC Government Data Mining
 
-Mining Project Structure
+Data Mining Project Structure
