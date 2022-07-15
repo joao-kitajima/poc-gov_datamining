@@ -20,6 +20,6 @@ def main(mytimer: func.TimerRequest, outputblob: func.Out[TextIOWrapper]) -> Non
     # Running Crawler
     run_spider(spider=crawlers.AlspCrawler)
     
-    with open(os.path.join(ROOT_DIR, 'alsp_crawler.jsonl')) as file_handler:
+    with open(os.path.join(ROOT_DIR, 'alsp_crawler.jsonl'), encoding='utf-8') as file_handler:
         content = file_handler.read()
         outputblob.set(content)
