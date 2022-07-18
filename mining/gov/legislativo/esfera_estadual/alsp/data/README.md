@@ -1,0 +1,1 @@
+This folder serves like a 'temp' folder. It holds your scraped data. Don't delete it.

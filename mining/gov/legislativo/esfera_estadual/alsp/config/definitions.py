@@ -49,8 +49,10 @@ def load_yaml_config():
 def get_files(dir):
     with os.scandir(dir) as entries:
         for entry in entries:
-            if entry.is_file() and not entry.name.startswith('.'):
-                yield entry
+            if entry.is_file() \
+                and not entry.name.startswith('.') \
+                and not entry.name == 'README.md':
+                    yield entry
                 
 
 def upload(files, connection_string, container_name, rmdir=True):
