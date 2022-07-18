@@ -3,7 +3,7 @@ import logging
 import os
 import azure.functions as func
 from io import TextIOWrapper
-from config.definitions import ROOT_DIR, run_spider
+from config.definitions import ROOT_DIR, run_spider, upload, get_files, load_yaml_config
 from scraping.scraping.spiders import crawlers
 
 
@@ -20,6 +20,7 @@ def main(mytimer: func.TimerRequest, outputblob: func.Out[TextIOWrapper]) -> Non
     # Running Crawler
     run_spider(spider=crawlers.AlspCrawler)
     
-    with open(os.path.join(ROOT_DIR, 'alsp_crawler.jsonl'), encoding='utf-8') as file_handler:
-        content = file_handler.read()
-        outputblob.set(content)
+    config = load_yaml_config()
+    scraped_data = get_files(config['source_folder'] + '/data')
+    upload(scraped_data, config['azure_storage_connectionstring'], config['datalake'])
+    
