@@ -27,11 +27,11 @@ def run_spider(spider, settings={
         except Exception as e:
             q.put(e)
 
-    q = Queue()
-    p = Process(target=f, args=(q,))
-    p.start()
-    result = q.get()
-    p.join()
+    queue = Queue()
+    process = Process(target=f, args=(queue,))
+    process.start()
+    result = queue.get()
+    process.join()
 
     if result is not None:
         raise result

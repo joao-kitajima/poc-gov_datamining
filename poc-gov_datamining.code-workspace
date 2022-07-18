@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		// Assembleias Legislativas
+		{
+			"path": "mining/gov/legislativo/esfera_estadual/alsp"
+		},
+		{
+			"path": "mining/gov/legislativo/esfera_estadual/almg"
+		}
+	],
+	"settings": {
+		"debug.internalConsoleOptions": "neverOpen"
+	},
+}

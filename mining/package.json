@@ -1,0 +1,14 @@
+{
+  "name": "mining",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd $FUNCTION_PATH; source .venv/bin/activate; pip install -r requirements.txt; func host start",
+    "almg": "cd gov/legislativo/esfera_estadual/almg/; source .venv/bin/activate; pip install -r requirements.txt; func host start",
+    "alsp": "cd gov/legislativo/esfera_estadual/alsp/; source .venv/bin/activate; pip install -r requirements.txt; func host start"
+  },
+  "author": "",
+  "license": "ISC"
+}
