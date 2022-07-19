@@ -1,13 +1,12 @@
 import datetime
 import logging
-import os
+
 import azure.functions as func
-from io import TextIOWrapper
-from config.definitions import ROOT_DIR, run_spider
+from config.definitions import run_spider, upload
 from scraping.scraping.spiders import crawlers
 
 
-def main(mytimer: func.TimerRequest, outputblob: func.Out[TextIOWrapper]) -> None:
+def main(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
 
@@ -17,9 +16,6 @@ def main(mytimer: func.TimerRequest, outputblob: func.Out[TextIOWrapper]) -> Non
     logging.info('Python timer trigger function ran at %s', utc_timestamp)
     
     
-    # Running Crawler
-    run_spider(spider=crawlers.AlmgCrawler)
-    
-    with open(os.path.join(ROOT_DIR, 'almg_crawler.jsonl')) as file_handler:
-        content = file_handler.read()
-        outputblob.set(content)
+    # Running Spiders
+    run_spider(spider=crawlers.AlmgCrawler, crawler=True)
+    upload(crawler=True)

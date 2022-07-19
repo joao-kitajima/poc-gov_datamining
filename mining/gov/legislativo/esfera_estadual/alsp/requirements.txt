@@ -34,7 +34,6 @@ requests-oauthlib==1.3.1
 Scrapy==2.6.1
 service-identity==21.1.0
 six==1.16.0
--e git+https://github.com/joao-kitajima/poc-gov_datamining.git@3d7942f64aac1a985fd0bd26b5869c0b61bcd6aa#egg=themisminingcfg&subdirectory=mining/gov/legislativo/esfera_estadual/alsp/config
 tldextract==3.3.1
 Twisted==22.4.0
 typing_extensions==4.3.0

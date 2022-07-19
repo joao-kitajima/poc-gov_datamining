@@ -1,4 +1,3 @@
-# INIT
 import datetime
 import logging
 
