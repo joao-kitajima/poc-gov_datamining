@@ -1,27 +1,57 @@
+import json
 import os
 from multiprocessing import Process, Queue
+
+from azure.storage.blob import ContainerClient
+from scrapy.spiders import Spider
 from scrapy.crawler import CrawlerRunner
 from twisted.internet import reactor
-import yaml
-from azure.storage.blob import ContainerClient
 
 
+# Filepath constant of current project
 ROOT_DIR = os.path.realpath(
-    os.path.join(os.path.dirname(__file__), '..'))
+    os.path.join(os.path.dirname(__file__), '../'))
 
 
-def run_spider(spider, settings={
+def build_filepath(file: str) -> str:
+    """Pass __file__ name and get the absolute filepath."""
+    
+    return os.path.join(ROOT_DIR, file)
+
+
+def get_project_name() -> str:
+    """Get the current project's folder name."""
+    
+    return os.getcwd().split('/')[-1]
+
+
+# Azure Connection
+def get_connection_string() -> str:
+    """Get Azure Web Jobs Storage Key from 'local.settings.json'."""
+    
+    with open(build_filepath('local.settings.json')) as file:
+        return json.load(file)['Values']['AzureWebJobsStorage']
+
+
+# Spider Configs
+def run_spider(spider: Spider, settings: dict=None, crawler=False) -> None:
+    CRAWLER_SETTINGS = {
         'FEEDS': {
-            'data/alsp_crawler.jsonl': {
+            f'temp/{get_project_name()}_crawler.jsonl': {
                 'format': 'jsonlines',
                 'encoding': 'utf8',
                 'overwrite': True
             }
         }
-    }):
-    def f(q):
+    }
+    
+    def f(q, settings=settings, crawler=crawler):
         try:
-            runner = CrawlerRunner(settings=settings)
+            if crawler:
+                runner = CrawlerRunner(settings=CRAWLER_SETTINGS)
+            else:
+                runner = CrawlerRunner(settings)
+            
             deferred = runner.crawl(spider)
             deferred.addBoth(lambda _: reactor.stop())
             reactor.run()
@@ -38,40 +68,32 @@ def run_spider(spider, settings={
     if result is not None:
         raise result
     
+
+# Upload Configs
+def upload(crawler=False):
+    def get_files():
+        dir = build_filepath('temp/')
     
-def load_yaml_config():
-    dir_root = os.path.dirname(os.path.abspath(__file__))
+        with os.scandir(dir) as entries:
+            for entry in entries:
+                if entry.is_file() \
+                    and not entry.name == 'README.md' \
+                    and not entry.name.startswith('.'):
+                        yield entry
     
-    with open(dir_root + '/config.yaml') as yaml_file:
-        return yaml.load(yaml_file, Loader=yaml.FullLoader)
-
-
-def get_files(dir):
-    with os.scandir(dir) as entries:
-        for entry in entries:
-            if entry.is_file() \
-                and not entry.name.startswith('.') \
-                and not entry.name == 'README.md':
-                    yield entry
-                
-
-def upload(files, connection_string, container_name, rmdir=True):
-    container_client = ContainerClient.from_connection_string(connection_string, container_name)
+    if crawler:
+        container_client = ContainerClient.from_connection_string(
+            get_connection_string(), 'datasources')  
+    else:
+        container_client = ContainerClient.from_connection_string(
+            get_connection_string(), 'datalake')
+        
     print('Uploading files to blob storage ...')
     
-    for file in files:
+    for file in get_files():
         blob_client = container_client.get_blob_client(file.name)
         
         with open(file.path, 'rb') as data:
             blob_client.upload_blob(data, overwrite=True)
+            os.remove(file)            
             print('Data uploaded to blob storage.')
-            
-            if rmdir:
-                os.remove(file)
-                
-                
-config = load_yaml_config()
-sc_data = get_files(config['source_folder'] + '/data')
-print(* sc_data)
-                
-
